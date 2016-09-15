@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <cc:interface shortDescription="Campo de data">        
+        <cc:attribute name="valor" required="true"/>         
+        <cc:attribute name="mask"/><!--true-->
+        <cc:attribute name="pattern"/>
+        <cc:attribute name="mensagem"/>
+        <cc:attribute name="navigator"/><!--true-->
+        <cc:attribute name="requerido"/><!--true-->
+    </cc:interface>
+    <cc:implementation>
+        <p:calendar value="#{cc.attrs.valor}}"
+                    mask="#{cc.attrs.mask}" pattern="#{cc.attrs.pattern}"
+                    required="#{cc.attrs.requerido}"
+                    requiredMessage="#{cc.attrs.mensagem}"
+                    navigator="#{cc.attrs.navigator}">
+                    <f:converter converterId="converterCalendar"/>
+                </p:calendar>        
+    </cc:implementation>
+</html>
+

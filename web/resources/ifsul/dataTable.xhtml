@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <cc:interface shortDescription="Data Table">
+        <cc:attribute name="valor" required="true"/>
+        <cc:attribute name="titulo" required="true"/>        
+        <cc:attribute name="paginacao" required="true" default="false"/>
+        <cc:attribute name="linhas" required="true" default="4"/>        
+    </cc:interface>
+    <cc:implementation>
+        <p:dataTable value="#{cc.attrs.valor}"
+                     reflow="true"
+                     var="obj" 
+                     paginator="#{cc.attrs.paginacao}"
+                     rows="#{cc.attrs.linhas}">
+            <f:facet name="header">
+                <p:outputLabel value="#{cc.attrs.titulo}"/>
+            </f:facet>
+            <cc:insertChildren/>
+        </p:dataTable>
+    </cc:implementation>
+</html>
+
