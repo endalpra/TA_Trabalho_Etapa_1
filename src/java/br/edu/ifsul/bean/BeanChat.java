@@ -1,9 +1,11 @@
 package br.edu.ifsul.bean;
 
+import br.edu.ifsul.modelo.Mensagem;
 import br.edu.ifsul.modelo.Usuario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PreDestroy;
 import javax.ejb.Singleton;
 
 /**
@@ -11,9 +13,10 @@ import javax.ejb.Singleton;
  * @author Érico
  */
 @Singleton
-public class BeanChat implements Serializable{
+public class BeanChat implements Serializable {
+
     private List<Usuario> usuarios = new ArrayList<>();
-    private List<String> mensagens = new ArrayList<>();
+    private List<Mensagem> mensagens = new ArrayList<>();
 
     public BeanChat() {
     }
@@ -26,13 +29,12 @@ public class BeanChat implements Serializable{
         this.usuarios = usuarios;
     }
 
-    public List<String> getMensagens() {
+    public List<Mensagem> getMensagens() {
         return mensagens;
     }
 
-    public void setMensagens(List<String> mensagens) {
+    public void setMensagens(List<Mensagem> mensagens) {
         this.mensagens = mensagens;
-    } 
-    
-}
+    }
 
+}

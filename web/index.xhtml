@@ -2,9 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ifsul="http://xmlns.jcp.org/jsf/composite/ifsul"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-    
+      xmlns:f="http://xmlns.jcp.org/jsf/core"> 
+
     <h:head>
         <title>Facelet Title</title>
     </h:head>
@@ -12,16 +14,76 @@
         <ui:define name="titulo">Chat</ui:define>
         <ui:define name="conteudo">
             <p:messages/>
-            <p:dataGrid var="obj" value="#{controleChat.beanChat.usuarios}"
-                            columns="3" layout="grid"
-        rows="12" paginator="true" id="Usuarios"
-        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
-        {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-        rowsPerPageTemplate="6,12,16">
-                <p:panel header="#{obj.nome}" style="text-align: center"></p:panel>
-            </p:dataGrid>
-                         
+            <p:growl id="growl" showDetail="true" />            
+            <h:form id="form">
+                <p:remoteCommand name="updateList" update="users" process="@this" />
+
+                <p:fieldset id="container" legend="Chat EJB" toggleable="true">
+
+                    <h:panelGroup rendered="true">
+                        <h:panelGrid columns="2" columnClasses="publicColumn,usersColumn" style="width:100%">
+                            <p:outputPanel id="public"  layout="block" styleClass="ui-corner-all ui-widget-content chatlogs" >
+                                <h:dataTable  value="#{controleChat.beanChat.mensagens}" var="obj">
+                                    <p:column>
+                                        <p:outputLabel value="#{obj.usuario.nome} diz: #{obj.msg} "/>                                       
+                                    </p:column>
+                                </h:dataTable>
+                            </p:outputPanel>
+
+                            <p:dataList id="users" var="user" value="#{controleChat.beanChat.usuarios}" styleClass="usersList">
+                                <f:facet name="header">
+                                    #{msgs['usuario.form.usuario']}
+                                </f:facet>
+
+                                <p:commandButton title="Chat" icon="ui-icon-comment" oncomplete="PF('pChat').show()" update=":form:privateChatContainer">
+                                    <f:setPropertyActionListener value="#{user}" target="#{controleChat.beanChat.usuarios}" />
+                                </p:commandButton>
+                                #{user.nome}
+                            </p:dataList>
+                        </h:panelGrid>
+                        <p:separator />
+                        <p:inputText value="#{controleChat.msg}" styleClass="messageInput" />
+                        <p:spacer width="5" />
+                        <p:commandButton value="#{msgs['usuario.form.enviar']}" actionListener="#{controleChat.sm()}" oncomplete="$('.messageInput').val('').focus()" update="container"  />
+                        <p:spacer width="5" />
+                        <p:commandButton value="#{msgs['usuario.form.desconectar']}" actionListener="#{controleUsuario.beanUsuarios.sair()}" global="false" update="container" />
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{not false}" >
+                        #{msgs['usuario.form.nome']}: <p:inputText value="#{controleUsuario.objeto.nome}" disabled="false" placeholder="#{msgs['usuario.form.obrigatorio']}"/>
+
+                        <p:spacer width="5" />
+                        <p:commandButton value="#{msgs['usuario.form.entrar']}" actionListener="#{controleUsuario.salvar()}" update="container"
+                                         icon="ui-icon-person" disabled="" />
+                    </h:panelGroup>
+
+                </p:fieldset>
+
+                <p:dialog widgetVar="pChat" header="Private Chat" modal="true" showEffect="fade" hideEffect="fade">
+                    <h:panelGrid id="privateChatContainer" columns="2" columnClasses="vtop,vtop">
+                    </h:panelGrid>
+                </p:dialog>
+                <p:poll interval="3" update="container" />
+            </h:form>
+
+            <p:socket onMessage="handleMessage" channel="/{room}" autoConnect="false" widgetVar='subscriber' />
+
+            <script type="text/javascript">
+                function handleMessage(message) {
+                    var chatContent = $(PrimeFaces.escapeClientId('form:public')),
+                            text = (message.user) ? message.user + ':' + message.text : message.text;
+
+                    chatContent.append(text + '<br />');
+
+                    //keep scroll
+                    chatContent.scrollTop(chatContent.height());
+
+                    if (message.updateList) {
+                        updateList();
+                    }
+                }
+            </script>
+
         </ui:define>            
     </ui:composition>
 </html>
-

@@ -2,9 +2,11 @@ package br.edu.ifsul.controle;
 
 import br.edu.ifsul.bean.BeanChat;
 import br.edu.ifsul.bean.BeanUsuario;
+import br.edu.ifsul.modelo.Mensagem;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -16,15 +18,20 @@ import javax.inject.Named;
 public class ControleChat implements Serializable{
     @EJB
     private BeanChat beanChat;
-    @EJB
-    private BeanUsuario beanUsuarios;
     
+    @Inject
+    private ControleUsuario controleUsuario;
+    
+    private String msg;
     public ControleChat(){
         
     }
     
+    public void sm(){
+        beanChat.getMensagens().add(new Mensagem(2, controleUsuario.getBeanUsuarios().getUsuario(), msg));
+    }
     public String chat(){
-        return "carrinho";
+        return "chat";
     }
 
     public BeanChat getBeanChat() {
@@ -34,13 +41,21 @@ public class ControleChat implements Serializable{
     public void setBeanChat(BeanChat beanChat) {
         this.beanChat = beanChat;
     }
-
-    public BeanUsuario getBeanUsuarios() {
-        return beanUsuarios;
+    
+    public ControleUsuario getControleUsuario() {
+        return controleUsuario;
     }
 
-    public void setBeanUsuarios(BeanUsuario beanUsuarios) {
-        this.beanUsuarios = beanUsuarios;
-    }   
+    public void setControleUsuario(ControleUsuario controleUsuario) {
+        this.controleUsuario = controleUsuario;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
     
 }
