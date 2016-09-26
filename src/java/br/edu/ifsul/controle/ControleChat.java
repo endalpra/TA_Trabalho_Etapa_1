@@ -28,7 +28,8 @@ public class ControleChat implements Serializable{
     }
     
     public void sm(){
-        beanChat.getMensagens().add(new Mensagem(2, controleUsuario.getBeanUsuarios().getUsuario(), msg));
+        if(controleUsuario.getBeanUsuarios().getUsuario() != null)
+            beanChat.getMensagens().add(new Mensagem(2, controleUsuario.getBeanUsuarios().getUsuario(), msg));
     }
     public String chat(){
         return "chat";

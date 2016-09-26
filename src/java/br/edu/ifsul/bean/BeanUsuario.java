@@ -22,7 +22,7 @@ import javax.inject.Inject;
  * @author Érico
  */
 @Stateful
-@StatefulTimeout(unit = TimeUnit.MINUTES, value = 1)
+@StatefulTimeout(unit = TimeUnit.MINUTES, value = 10)
 public class BeanUsuario implements Serializable {
 
     private Usuario usuario;
@@ -47,7 +47,8 @@ public class BeanUsuario implements Serializable {
         //Util.mensagemInformacao("Usuário "+usuario.getNome()+" desconectou-se");
         Mensagem m = new Mensagem(beanChat.getMensagens().size() + 1, new Usuario(0, "Servidor"), "Usuário " + usuario.getNome() + " desconectou-se!");
         beanChat.getMensagens().add(m);
-        controleChat.getBeanChat().getUsuarios().remove(usuario);        
+        controleChat.getBeanChat().getUsuarios().remove(usuario);  
+        usuario = null;
     }
 
     public Usuario getUsuario() {
